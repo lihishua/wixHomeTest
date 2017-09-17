@@ -130,6 +130,7 @@
                     title = data.title;
                     row.className = "row";
                     container.appendChild(row);
+                    link.setAttribute("target","_blank");
                     link.setAttribute("href", "https://www.reddit.com" + data.permalink);
                     row.appendChild(link);
                     thumbnail.setAttribute("src", data.thumbnail);
