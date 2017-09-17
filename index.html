@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<head>
+    <center>
+        <style>
+            a {
+                text-decoration: none;
+                display: inline-block;
+                padding: 8px 16px;
+            }
+
+            a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+
+            .previous {
+                background-color: #f1f1f1;
+                color: black;
+            }
+
+            .next {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            .round {
+                border-radius: 50%;
+            }
+        </style>
+        <script
+                src="https://cdn.jsdelivr.net/npm/reddit.js@0.1.4/reddit.min.js"></script>
+        <link
+                rel="stylesheet"
+                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script
+                src="https://cdn.jsdelivr.net/npm/reddit.js@0.1.4/reddit.min.js"></script>
+    </center>
+</head>
+
+<body>
+<center>
+    <style>
+        input {
+            text-decoration: none;
+            display: inline-block;
+            padding: 8px 16px;
+        }
+        .text {
+            background-color: #b3b9e8;
+            color: black;
+        }
+        .round {
+            border-radius: 50%;
+        }
+
+        button {
+            text-decoration: none;
+            display: inline-block;
+            padding: 8px 16px;
+        }
+        button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .go {
+            background-color: #949a83;
+            color: black;
+        }
+        .previous {
+            background-color: #9a7a7a;
+            color: black;
+        }
+        .next {
+            background-color: #79919a;
+            color: white;
+        }
+        .round {
+            border-radius: 50%;
+        }
+    </style>
+
+    <input
+            type="text"
+            id="subreddit"
+            class="text round"
+            placeholder="Type Subreddit"><br>
+    <button
+            onclick="goFunction()"
+            class="go round"> go
+    </button>
+    <br>
+    <button
+            onclick="preFunction()"
+            class="previous round">&#8249;
+    </button>
+    <button
+            onclick="nextFunction()"
+            class="next round">&#8250;
+    </button>
+    <div
+            class="container"
+            id="thumbArea"></div>
+</center>
+<script>
+    var x;
+    var container;
+    var thumbnail;
+    var link;
+    var title;
+    var page = 1;
+    var isGoClicked = false;
+
+    function goFunction() {
+        isGoClicked = true;
+        x = document.getElementById('subreddit').value;
+        page = 1;
+        showImages();
+    }
+
+    function showImages() {
+        container = document.getElementById('thumbArea');
+        cleanElement(container);
+        reddit.top(x).t("all").limit(9 * page).fetch(function (res) {
+            for (var i = 0; i < 3; i++) {
+                var row = document.createElement("div");
+                for (var j = 0; j < 3; j++) {
+                    var data = res.data.children[page * (3 * i + j)].data;
+                    thumbnail = document.createElement("img");
+                    link = document.createElement("a");
+                    title = data.title;
+                    row.className = "row";
+                    container.appendChild(row);
+                    link.setAttribute("href", "https://www.reddit.com" + data.permalink);
+                    row.appendChild(link);
+                    thumbnail.setAttribute("src", data.thumbnail);
+                    thumbnail.setAttribute("title", title);
+                    link.appendChild(thumbnail);
+                }
+            }
+        });
+    }
+
+    function cleanElement(element) {
+        element.innerHTML = "";
+    }
+
+    function preFunction() {
+        if (page > 1 && isGoClicked) {
+            cleanElement(container);
+            page--;
+            showImages();
+        }
+    }
+
+    function nextFunction() {
+        if (isGoClicked) {
+            cleanElement(container);
+            page++;
+            showImages();
+        }
+    }
+</script>
+</body>
+</html>
